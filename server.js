@@ -9,6 +9,7 @@ var cors = require('cors')
 
 // const swaggerUi = require('swagger-ui-express')
 // const swaggerFile = require('./swagger-output.json')
+const userRouter = require('./routes/user');
 const bodyParser = require('body-parser')
 
 
@@ -44,7 +45,7 @@ app.use(cors({
 
 app.options('*', cors());
 
-
+app.use('/user', userRouter);
 
 app.use(bodyParser.json())
 // app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
