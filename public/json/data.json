@@ -1,0 +1,122 @@
+{
+    "apartments": [
+      {
+        "apartment_id": 1,
+        "name": "30 m² Apartment",
+        "location": "Tromsø City Center",
+        "price_per_night": 2000,
+        "weekly_rental": 14000,
+        "monthly_rental": 60000,
+        "description": "Cozy 1-bedroom apartment with a city view.",
+        "availability": true
+      },
+      {
+        "apartment_id": 2,
+        "name": "70 m² Apartment",
+        "location": "Tromsø City Center",
+        "price_per_night": 3800,
+        "weekly_rental": 26600,
+        "monthly_rental": 114000,
+        "description": "Spacious 2-bedroom apartment near downtown.",
+        "availability": true
+      },
+      {
+        "apartment_id": 3,
+        "name": "140 m² Apartment",
+        "location": "Tromsø Suburb",
+        "price_per_night": 5000,
+        "weekly_rental": 35000,
+        "monthly_rental": 150000,
+        "description": "Luxury 3-bedroom apartment with sea views.",
+        "availability": true
+      }
+    ],
+    "cars": [
+      {
+        "car_id": 1,
+        "make": "Tesla",
+        "model": "Model S",
+        "year": 2017,
+        "price_per_day": 1500,
+        "extra_km_charge": 5,
+        "availability": true
+      },
+      {
+        "car_id": 2,
+        "make": "Tesla",
+        "model": "Model Y",
+        "year": 2020,
+        "price_per_day": 2250,
+        "extra_km_charge": 5,
+        "availability": true
+      },
+      {
+        "car_id": 3,
+        "make": "Tesla",
+        "model": "Model 3",
+        "year": 2019,
+        "price_per_day": 1500,
+        "extra_km_charge": 5,
+        "availability": true
+      }
+    ],
+    "tours": [
+      {
+        "tour_id": 1,
+        "name": "Northern Lights Chase by Bus",
+        "description": "Chase the Northern Lights with a guided bus tour.",
+        "price": 1295,
+        "location": "Tromsø",
+        "availability": true
+      },
+      {
+        "tour_id": 2,
+        "name": "Small-Group Aurora Hunt",
+        "description": "A personalized Aurora hunt for a small group.",
+        "price": 2650,
+        "location": "Tromsø",
+        "availability": true
+      },
+      {
+        "tour_id": 3,
+        "name": "Guided Biking Tour on Kvaløya Island",
+        "description": "Enjoy a scenic guided biking tour across Tromsø's islands.",
+        "price": 1500,
+        "location": "Kvaløya Island",
+        "availability": true
+      },
+      {
+        "tour_id": 4,
+        "name": "Small-Group Hiking Tour",
+        "description": "Explore the Arctic landscapes with an experienced hiking guide.",
+        "price": 1300,
+        "location": "Tromsø",
+        "availability": true
+      },
+      {
+        "tour_id": 5,
+        "name": "Snowshoeing Tour",
+        "description": "Snowshoe through the breathtaking winter landscapes of Tromsø.",
+        "price": 1400,
+        "location": "Tromsø",
+        "availability": true
+      }
+    ],
+    "booking_rules": {
+      "apartment": {
+        "min_night_stay": 1,
+        "extra_person_charge": 500,
+        "cancellation_policy": "Full refund if canceled 7 days before check-in."
+      },
+      "car": {
+        "max_km_per_2_days": 400,
+        "extra_km_charge": 5,
+        "cancellation_policy": "Full refund if canceled 48 hours before rental."
+      },
+      "tour": {
+        "advance_booking_required": true,
+        "cancellation_policy": "Non-refundable within 24 hours of tour date."
+      }
+    }
+  }
+  

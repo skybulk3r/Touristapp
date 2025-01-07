@@ -1,3 +1,4 @@
+require('dotenv').config(); 
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -6,12 +7,18 @@ var logger = require('morgan');
 var jwt = require('jsonwebtoken');
 var sequelize = require('sequelize')
 var cors = require('cors')
-
+var bodyParser = require('body-parser')
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); 
 // const swaggerUi = require('swagger-ui-express')
 // const swaggerFile = require('./swagger-output.json')
-const userRouter = require('./routes/user');
-const bodyParser = require('body-parser')
-
+const usersRouter = require('./routes/users');
+const carsRouter = require('./routes/cars');
+const toursRouter = require('./routes/tours');
+const rolesRouter = require('./routes/roles');
+const bookingsRouter = require('./routes/bookings');
+const apartmentsRouter = require('./routes/apartments');
+const ordersRouter = require('./routes/orders');
+const stripeWebhookRouter = require('./routes/stripeWebhook');
 
 require('dotenv').config();
 var db = require('./models'); 
@@ -45,7 +52,16 @@ app.use(cors({
 
 app.options('*', cors());
 
-app.use('/user', userRouter);
+app.use('/users', usersRouter);
+app.use('/apartments', apartmentsRouter);
+app.use('/bookings', bookingsRouter);
+app.use('/cars', carsRouter);
+app.use('/orders', ordersRouter);
+app.use('/roles', rolesRouter);
+app.use('/tours', toursRouter);
+
+// Add the Stripe webhook route
+app.use('/api/stripe', stripeWebhookRouter);
 
 app.use(bodyParser.json())
 // app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))

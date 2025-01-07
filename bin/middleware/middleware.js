@@ -26,7 +26,7 @@ const verifyAdmin = (req, res, next) => {
   if (req.user && req.user.role === 1) {
     return next();
   } else {
-    console.warn('Unauthorized Access Attempt (Admin):', req.user); 
+    console.warn('Unauthorized Access Attempt (Admin):', req.user); a
     return res.status(403).json({
       status: 'fail',
       message: 'Access denied. Admins only.',
