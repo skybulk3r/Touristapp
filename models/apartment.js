@@ -9,7 +9,11 @@ module.exports = (sequelize, Sequelize) => {
     location: Sequelize.STRING,
     price_per_night: Sequelize.FLOAT,
     description: Sequelize.STRING,
-    availability: { type: Sequelize.BOOLEAN, defaultValue: true },
+    isavailable: { type: Sequelize.BOOLEAN, defaultValue: true },
+    imgurls: {
+      type: Sequelize.JSON,  // Use JSON to store an array of URLs
+      allowNull: false,
+    },
     created_at: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
   });
 

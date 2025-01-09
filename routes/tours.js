@@ -1,7 +1,7 @@
 // E:\Rental\routes\tours.js
 const express = require('express');
 const router = express.Router();
-const { verifyToken } = require('../bin/middleware/middleware');
+const { verifyToken } = require('../middleware/middleware');
 const tourService = require('../services/tourService'); // Import the tourService
 
 // GET all tours

@@ -24,9 +24,9 @@ const getAllRoles = async () => {
 };
 
 // Get role by ID
-const getRoleById = async (roleId) => {
+const getRoleById = async (RoleId) => {
   try {
-    const role = await Role.findByPk(roleId);
+    const role = await Role.findByPk(RoleId);
     if (!role) {
       throw new Error('Role not found');
     }
@@ -37,9 +37,9 @@ const getRoleById = async (roleId) => {
 };
 
 // Update a role by ID
-const updateRole = async (roleId, roleData) => {
+const updateRole = async (RoleId, roleData) => {
   try {
-    const role = await Role.findByPk(roleId);
+    const role = await Role.findByPk(RoleId);
     if (!role) {
       throw new Error('Role not found');
     }
@@ -52,9 +52,9 @@ const updateRole = async (roleId, roleData) => {
 };
 
 // Delete a role by ID
-const deleteRole = async (roleId) => {
+const deleteRole = async (RoleId) => {
   try {
-    const role = await Role.findByPk(roleId);
+    const role = await Role.findByPk(RoleId);
     if (!role) {
       throw new Error('Role not found');
     }

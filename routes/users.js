@@ -1,7 +1,7 @@
 // E:\Rental\routes\users.js
 const express = require('express');
 const router = express.Router();
-const { verifyToken, verifyAdmin } = require('../bin/middleware/middleware');
+const { verifyToken, verifyAdmin } = require('../middleware/middleware');
 const userService = require('../services/userService'); // Import the userService
 
 // GET all users (Admin only)

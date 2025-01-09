@@ -19,6 +19,7 @@ const bookingsRouter = require('./routes/bookings');
 const apartmentsRouter = require('./routes/apartments');
 const ordersRouter = require('./routes/orders');
 const stripeWebhookRouter = require('./routes/stripeWebhook');
+const authRouter = require('./routes/auth');
 
 require('dotenv').config();
 var db = require('./models'); 
@@ -59,6 +60,7 @@ app.use('/cars', carsRouter);
 app.use('/orders', ordersRouter);
 app.use('/roles', rolesRouter);
 app.use('/tours', toursRouter);
+app.use('/auth', authRouter);
 
 // Add the Stripe webhook route
 app.use('/api/stripe', stripeWebhookRouter);
@@ -69,6 +71,10 @@ app.use(bodyParser.json())
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on http://localhost:3000');
 });
 
 // error handler

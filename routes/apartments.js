@@ -5,17 +5,24 @@ const { verifyToken, verifyAdmin } = require('../middleware/middleware');
 
 // Admin: Create a new apartment
 router.post('/', verifyToken, verifyAdmin, async (req, res) => {
-  const { name, description, price_per_night, imgurl, isavailable } = req.body;
+  const { name, description, location, price_per_night, imgurls, isavailable } = req.body;
 
-  if (!name || !description || !price_per_night || !imgurl) {
+  if (!name || !description || !location || !price_per_night || !imgurls || !Array.isArray(imgurls) || imgurls.length === 0) {
     return res.status(400).json({
       status: "fail",
-      message: "All fields (name, description, price_per_night, imgurl) are required."
+      message: "All fields (name, description, location, price_per_night, imgurls) are required and imgurls should be an array of URLs."
     });
   }
 
   try {
-    const apartment = await ApartmentService.createApartment({ name, description, price_per_night, imgurl, isavailable });
+    const apartment = await ApartmentService.createApartment({
+      name,
+      description,
+      location,
+      price_per_night,
+      imgurls,  // Now passing the array of image URLs
+      isavailable
+    });
     res.status(201).json({
       status: "success",
       message: "Apartment created successfully.",
@@ -29,11 +36,13 @@ router.post('/', verifyToken, verifyAdmin, async (req, res) => {
   }
 });
 
+
 // Admin: Update an apartment
 router.put('/:id', verifyToken, verifyAdmin, async (req, res) => {
-  const { name, description, price_per_night, imgurl, isavailable } = req.body;
+  console.log(req.body); 
+  const { name, description, location, price_per_night, imgurls, isavailable } = req.body;
   try {
-    const updated = await ApartmentService.updateApartment(req.params.id, { name, description, price_per_night, imgurl, isavailable });
+    const updated = await ApartmentService.updateApartment(req.params.id, { name, description, location, price_per_night, imgurls, isavailable });
     if (updated[0] === 0) {
       return res.status(404).json({ status: "fail", message: "Apartment not found" });
     }

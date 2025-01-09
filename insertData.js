@@ -1,4 +1,4 @@
-const { Apartment, Car, Tour, sequelize } = require('./models'); // Import your models
+const { Apartment, Car, Tour, Role, sequelize } = require('./models'); // Import your models
 const fs = require('fs');
 
 // Read the JSON data from the file (you can store the JSON in a file or directly embed it here)
@@ -15,6 +15,7 @@ const insertApartments = async () => {
       monthly_rental: apartment.monthly_rental,
       description: apartment.description,
       availability: apartment.availability,
+      imgurls: apartment.imgurls || []  // Use an empty array if imgurls is not present
     });
   }
 };
@@ -46,6 +47,15 @@ const insertTours = async () => {
   }
 };
 
+// Function to insert roles into the database
+const insertRoles = async () => {
+  for (const role of jsonData.roles) {
+    await Role.create({
+      role_name: role.role_name,
+    });
+  }
+};
+
 // Function to insert booking rules (you can adjust based on your model structure)
 const insertBookingRules = async () => {
   // Insert booking rules directly or use them in relevant models if needed
@@ -57,6 +67,7 @@ const insertData = async () => {
   try {
     await sequelize.sync(); // Sync the models with the database
     await insertApartments();
+    await insertRoles();
     await insertCars();
     await insertTours();
     await insertBookingRules();

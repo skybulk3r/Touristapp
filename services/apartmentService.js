@@ -11,10 +11,11 @@ class ApartmentService {
         apartments.apartment_id,
         apartments.name,
         apartments.description,
+        apartments.location,
         apartments.price_per_night,
-        apartments.imgurl,
+        apartments.imgurls,
         apartments.isavailable,
-        apartments.date_added,
+        apartments.created_at,
         apartments.createdAt,
         apartments.updatedAt
       FROM apartments

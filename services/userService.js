@@ -1,45 +1,87 @@
-// E:\Rental\services\userService.js
-const User = require('../models/user'); // Assuming you have the User model defined
-const bcrypt = require('bcryptjs'); // Assuming bcrypt is used for hashing passwords
+const { User, Role } = require('../models');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { Op } = require('sequelize');
 
-// Function to get all users (Admin only)
-const getAllUsers = () => {
-  return User.findAll();
+// Create a new user
+const createUser = async (userData) => {
+  try {
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    const user = await User.create({
+      name: userData.name,
+      email: userData.email,
+      password: hashedPassword,
+    });
+    return user;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
-// Function to get a specific user by id
-const getUserById = (userId) => {
-  return User.findByPk(userId);
+// Find a user by ID
+const findUserById = async (id) => {
+  try {
+    const user = await User.findByPk(id, {
+      include: [{ model: Role }],
+    });
+    return user;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
-// Function to update user information
-const updateUser = (userId, userData) => {
-  return User.update(userData, {
-    where: { user_id: userId },
-    returning: true, // Returns the updated user data
-  });
+// Update user information
+const updateUser = async (id, updates) => {
+  try {
+    if (updates.password) {
+      updates.password = await bcrypt.hash(updates.password, 10);
+    }
+    const [updated] = await User.update(updates, {
+      where: { user_id: id },
+    });
+
+    if (!updated) {
+      throw new Error('User not found');
+    }
+    return await findUserById(id);
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
-// Function to delete a user (admin only)
-const deleteUser = (userId) => {
-  return User.destroy({
-    where: { user_id: userId },
-  });
+// Delete a user
+const deleteUser = async (id) => {
+  try {
+    const deleted = await User.destroy({
+      where: { user_id: id },
+    });
+
+    if (!deleted) {
+      throw new Error('User not found');
+    }
+    return { message: 'User deleted successfully' };
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
-// Function to change a user's password
-const changePassword = (userId, newPassword) => {
-  const hashedPassword = bcrypt.hashSync(newPassword, 10);
-  return User.update({ password: hashedPassword }, {
-    where: { user_id: userId },
-    returning: true,
-  });
+// Find users with filters (for admin)
+const findUsers = async (filters) => {
+  try {
+    const users = await User.findAll({
+      where: filters,
+      include: [{ model: Role }],
+    });
+    return users;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 module.exports = {
-  getAllUsers,
-  getUserById,
+  createUser,
+  findUserById,
   updateUser,
   deleteUser,
-  changePassword,
+  findUsers,
 };

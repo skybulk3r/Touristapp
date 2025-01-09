@@ -117,6 +117,15 @@
         "advance_booking_required": true,
         "cancellation_policy": "Non-refundable within 24 hours of tour date."
       }
-    }
+    },
+    "roles": [
+      {
+        "role_id": 1,
+        "role_name": "Admin"
+      },
+      {
+        "role_id": 2,
+        "role_name": "User"
+      }
+    ]
   }
-  
