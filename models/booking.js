@@ -7,7 +7,10 @@ module.exports = (sequelize, Sequelize) => {
     },
     start_date: Sequelize.DATEONLY,
     end_date: Sequelize.DATEONLY,
-    total_price: Sequelize.FLOAT,
+    total_price: {
+    type: Sequelize.DECIMAL(10, 2),  // Decimal with 2 places after the decimal point
+    allowNull: false,
+    },
     payment_status: {
       type: Sequelize.STRING, // 'pending', 'paid'
       defaultValue: 'pending',

@@ -44,3 +44,4 @@ class ApartmentService {
 }
 
 module.exports = new ApartmentService();
+

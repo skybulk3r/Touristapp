@@ -6,51 +6,77 @@ const Tour = db.Tour;
 
 const createBooking = async (userId, bookingData) => {
   try {
-    let associatedModelData;
+    let associatedModelData = {};
+    let totalPrice = 0;
 
-    // Handle Getaround car booking logic
+    // Log bookingData for debugging
+    console.log('Booking Data:', bookingData);
+    console.log('Days:', bookingData.days);
+    console.log('Nights:', bookingData.nights);
+    console.log('Persons:', bookingData.persons);
+
+    // Handle Getaround car booking
     if (bookingData.booking_type === 'getaround') {
-      // Find the car based on car_id in the booking data
       const car = await Car.findOne({ where: { car_id: bookingData.car_id } });
       if (!car) {
         throw new Error('Car not found for Getaround booking');
       }
-
-      // Optionally, process payment using the Getaround API (this could be Stripe or another service)
-      // Assume payment is successful, update the car availability, etc.
       associatedModelData = { car_id: car.car_id };
-
-    } else if (bookingData.booking_type === 'airbnb') {
-      // Handle Airbnb apartment booking logic
+      const days = parseInt(bookingData.days, 10) || Math.ceil((new Date(bookingData.end_date) - new Date(bookingData.start_date)) / (1000 * 3600 * 24));
+      if (isNaN(days) || days <= 0) {
+        throw new Error('Invalid number of days');
+      }
+      totalPrice += car.price_per_day * days;  // Add car price to total
+    } 
+    // Handle Airbnb apartment booking
+    else if (bookingData.booking_type === 'airbnb') {
       const apartment = await Apartment.findOne({ where: { apartment_id: bookingData.apartment_id } });
       if (!apartment) {
         throw new Error('Apartment not found for Airbnb booking');
       }
-
-      // Process payment for Airbnb booking (via Stripe or another service)
       associatedModelData = { apartment_id: apartment.apartment_id };
-
-    } else if (bookingData.booking_type === 'tour') {
-      // Handle Tour booking logic
+      const nights = parseInt(bookingData.nights, 10) || Math.ceil((new Date(bookingData.end_date) - new Date(bookingData.start_date)) / (1000 * 3600 * 24));
+      if (isNaN(nights) || nights <= 0) {
+        throw new Error('Invalid number of nights');
+      }
+      totalPrice += apartment.price_per_night * nights;  // Add apartment price to total
+    }
+    // Handle Tour booking
+    else if (bookingData.booking_type === 'tour') {
       const tour = await Tour.findOne({ where: { tour_id: bookingData.tour_id } });
       if (!tour) {
         throw new Error('Tour not found for Tour booking');
       }
-
-      // Process payment using Stripe or another payment service
+      
+      console.log('Tour data:', tour);  // Log the tour object to check its contents
+      
       associatedModelData = { tour_id: tour.tour_id };
-
-    } else {
+      const persons = parseInt(bookingData.persons, 10) || 1;  // Default to 1 person if not specified
+    
+      if (!tour.price) {
+        throw new Error('Tour price per person is missing');
+      }
+    
+      totalPrice += tour.price * persons;  // Add tour price to total
+    }    
+    else {
       throw new Error('Invalid booking type');
     }
 
-    // After processing, create the booking in the system
+    // Check if there's any valid price
+    if (totalPrice <= 0) {
+      throw new Error('Invalid total price');
+    }
+
+    // Create the booking in the system
     const newBooking = await Booking.create({
       ...bookingData,
-      user_id: userId, // Associate with the logged-in user
-      ...associatedModelData, // Link to the correct model (car, apartment, or tour)
+      user_id: userId,
+      total_price: totalPrice,
+      ...associatedModelData,  // Link to the correct model (car, apartment, or tour)
     });
 
+    // Return the booking details
     return newBooking;
   } catch (error) {
     throw new Error('Error creating booking: ' + error.message);
@@ -71,15 +97,26 @@ const getBookingById = async (bookingId) => {
 
 const updateBooking = async (bookingId, updateData) => {
   try {
-    const booking = await Booking.update(updateData, {
+    // Perform the update
+    await Booking.update(updateData, {
       where: { booking_id: bookingId },
-      returning: true,
     });
-    return booking[1][0]; // Return the updated booking
+
+    // Fetch the updated booking after the update
+    const updatedBooking = await Booking.findOne({
+      where: { booking_id: bookingId },
+    });
+
+    if (!updatedBooking) {
+      throw new Error('Booking not found');
+    }
+
+    return updatedBooking;
   } catch (error) {
     throw new Error('Error updating booking: ' + error.message);
   }
 };
+
 
 const deleteBooking = async (bookingId) => {
   try {

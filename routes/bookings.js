@@ -8,15 +8,20 @@ router.post('/create', async (req, res) => {
   try {
     const bookingData = req.body;
 
-    // Ensure bookingType is provided
-    if (!bookingData.booking_type || !['airbnb', 'getaround', 'tour'].includes(bookingData.booking_type)) {
-      return res.status(400).json({ message: 'Invalid booking type' });
+    // Validate the booking data
+    if (!bookingData || !bookingData.booking_type) {
+      return res.status(400).json({ error: 'Booking type is required' });
     }
 
-    const newBooking = await bookingService.createBooking(bookingData);
+    if (!['airbnb', 'getaround', 'tour'].includes(bookingData.booking_type)) {
+      return res.status(400).json({ error: 'Invalid booking type' });
+    }
+
+    // Create booking
+    const newBooking = await bookingService.createBooking(req.user, bookingData); // Pass user_id and booking data
     res.status(201).json(newBooking);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Error creating booking: ' + error.message });
   }
 });
 
@@ -52,12 +57,20 @@ router.put('/:id', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const bookingId = req.params.id;
     const updateData = req.body;
+    console.log('Update Data:', updateData);  // Log the update data for debugging
+
     const updatedBooking = await bookingService.updateBooking(bookingId, updateData);
+    if (!updatedBooking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
     res.status(200).json(updatedBooking);
   } catch (error) {
+    console.error('Error updating booking:', error.message);  // Log the error for debugging
     res.status(500).json({ error: error.message });
   }
 });
+
 
 // Admin-only route: Delete booking
 router.delete('/:id', verifyToken, verifyAdmin, async (req, res) => {
